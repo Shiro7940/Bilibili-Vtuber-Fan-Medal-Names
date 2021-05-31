@@ -115,7 +115,7 @@ def game():
     finally:
         score_percent = "NaN"
         if total != 0 :
-            score_percent = str(round((correct/total)*100,4))
+            score_percent = str(round((correct/total)*100,2))
         print("你的分数是: "+score_percent+"分")
         print("正确: "+str(correct)+"题, 错误: "+str(false)+"题, 总计: "+str(total)+"题")
         
