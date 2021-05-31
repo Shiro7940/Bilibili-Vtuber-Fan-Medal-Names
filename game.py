@@ -61,6 +61,7 @@ def gen_question(qset:set,ans_name:str,ans_medal:str,mode:int) -> bool:
               "\nD: "+str(d))
         answer = str(input("答案: ")).upper()
         if answer == "E":
+            print("退出游戏")
             return "Exit"
         c = ans_dict.get(answer)
         if mode == 1 and templist[c] == ans_medal:
@@ -84,7 +85,7 @@ def game():
     correct = 0
     false = 0
     total = 0 
-    print("回答E可退出")
+    print("大小写均可，回答E可退出")
     try:
         limit = int(input("请输入题目量: "))
     except:
