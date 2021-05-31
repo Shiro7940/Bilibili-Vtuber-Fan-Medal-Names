@@ -29,6 +29,7 @@ def gen_rid_to_uid_dict():
             i+=1
     #print(i)
     #print(rid_to_uid_dict)
+    datatxt.close()
     return rid_to_uid_dict
 
 def gen_uid_to_rid_dict():
@@ -43,6 +44,7 @@ def gen_uid_to_rid_dict():
             i+=1
     #print(i)
     #print(uid_to_rid_dict)
+    datatxt.close()
     return uid_to_rid_dict
 
 def gen_rid_to_name_dict():
@@ -53,6 +55,7 @@ def gen_rid_to_name_dict():
         if datalist[-1] != "无":
             rid_to_name_dict.update({int(datalist[-1]):str(datalist[0])})
     #print(rid_to_name_dict)
+    datatxt.close()
     return rid_to_name_dict
     
 def gen_uid_to_name_dict():
@@ -63,6 +66,7 @@ def gen_uid_to_name_dict():
         if datalist[-2] != "无":
             uid_to_name_dict.update({int(datalist[-2]):str(datalist[0])})
     #print(uid_to_name_dict)
+    datatxt.close()
     return uid_to_name_dict
     
 def find_not_logged_in_vtbs():
@@ -105,8 +109,6 @@ def get_info_by_medal(mname:str):
         print(error)
         print("An ERROR Occurred")
         return None
-
-
 
 def main():
     exit = False
