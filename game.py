@@ -54,7 +54,8 @@ def gen_question(qset:set,ans_name:str,ans_medal:str,mode:int) -> bool:
         c = qlist[2][mode]
         d = qlist[3][mode]
         templist = [a,b,c,d]
-        ans_dict = {"A":0,"B":1,"C":2,"D":3}
+        ans_dict = {"A":0,"B":1,"C":2,"D":3,
+                    "1":0,"2":1,"3":2,"4":3}
         print("A: "+str(a)+
               "\nB: "+str(b)+
               "\nC: "+str(c)+
@@ -115,8 +116,8 @@ def game():
         score_percent = "NaN"
         if total != 0 :
             score_percent = str(round((correct/total)*100,4))
-        print("你的分数是: "+score_percent)
-        print("正确 "+str(correct)+"题 错误 "+str(false)+"题 总计 "+str(total)+"题")
+        print("你的分数是: "+score_percent+"分")
+        print("正确: "+str(correct)+"题, 错误: "+str(false)+"题, 总计: "+str(total)+"题")
         
 if __name__ == "__main__":
     game()
