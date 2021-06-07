@@ -67,7 +67,7 @@ def gen_uid_to_name_dict():
     
 def find_not_logged_in_vtbs():
     namedict = gen_rid_to_name_dict()
-    lst=[]
+    lst = []
     for item in vtblist:
         feedback = namedict.get(item) 
         if feedback == None:
@@ -108,11 +108,11 @@ def get_info_by_medal(mname:str):
 
 def gen_fst_list():
     medallist = list(vtb_fan_medal_dict.items())
-    fstlist=[]
+    fstlist = []
     for obj in medallist:
         rid, name = obj
         if name == "粉丝团":
-            fstlist+=[rid]
+            fstlist += [rid]
     return fstlist
 
 def main():
