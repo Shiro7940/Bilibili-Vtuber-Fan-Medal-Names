@@ -1,5 +1,6 @@
 # Bilibili-Vtuber-Fan-Medal-Names
 A Python script allows you to find a Vtuber by the Bilibili fan medal name 
+
 Vtubers data powered by https://vtbs.moe/detail
 ## Usage
 Download all the files and put them in a folder.
