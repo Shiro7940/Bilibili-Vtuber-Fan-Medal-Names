@@ -15,7 +15,7 @@ def gen_newid():
         
     print(ridset)
     datatxt.close()
-    return ridset
+    return list(ridset)
     
 def gen_rid_to_uid_dict():
     i=0
@@ -114,6 +114,15 @@ def gen_fst_list():
         if name == "粉丝团":
             fstlist += [rid]
     return fstlist
+
+def gen_none_list():
+    medallist = list(vtb_fan_medal_dict.items())
+    nonelist = []
+    for obj in medallist:
+        rid, name = obj
+        if name == "暂无粉丝勋章":
+            nonelist += [rid]
+    return nonelist
 
 def main():
     exit = False
