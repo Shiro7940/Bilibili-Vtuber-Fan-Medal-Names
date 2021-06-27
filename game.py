@@ -6,11 +6,10 @@ all_medal.remove("粉丝团")
 all_medal.remove("暂无粉丝勋章")
 all_medal_lst = list(all_medal)
 
-def get_name_by_medal(mname:str):
+def get_name_by_medal(mname:str,namedict):
     try:
         name = []
         roomid = find_rid_by_medal(mname)
-        namedict = gen_rid_to_name_dict()
         for item in roomid:
             nametemp = namedict.get(item,"Name Not Found")
             name += [nametemp]
@@ -20,7 +19,7 @@ def get_name_by_medal(mname:str):
         print("An ERROR Occurred")
         return None
 
-def gen_question_set(mname:str):
+def gen_question_set(mname:str,namedict):
     names = []
     medals = []
     output = set()
@@ -28,11 +27,12 @@ def gen_question_set(mname:str):
     while i in range(0,3):
         temp = all_medal_lst[random.randint(0,len(all_medal_lst)-1)]
         if temp != mname:
-            if get_name_by_medal(temp) != 'Name Not Found':
+            temp_name = get_name_by_medal(temp,namedict)
+            if temp_name != 'Name Not Found':
                 medals += [temp]
-                names += [get_name_by_medal(temp)]
+                names += [temp_name]
                 i += 1
-    names += [get_name_by_medal(mname)]
+    names += [get_name_by_medal(mname,namedict)]
     medals += [mname]
     for n in range(0,len(names)):
         output.add((names[n],medals[n]))
@@ -87,6 +87,8 @@ def game():
     false = 0
     total = 0 
     print("大小写均可，回答E可退出")
+    namedict = gen_rid_to_name_dict()
+    uiddict = gen_rid_to_uid_dict()        
     try:
         limit = int(input("请输入题目量: "))
     except:
@@ -94,11 +96,11 @@ def game():
     try:
         while (not exit) and (len(all_medal) >= 4) and total<limit: 
             ans_medal = all_medal.pop()
-            ans_name = get_name_by_medal(ans_medal)
+            ans_name = get_name_by_medal(ans_medal,namedict)
             if ans_name != 'Name Not Found':
                 total+=1
                 print("第 "+str(total)+"/"+str(limit)+" 题")
-                qset = gen_question_set(ans_medal)
+                qset = gen_question_set(ans_medal,namedict)
                 mode = round(random.random())
                 status = gen_question(qset,ans_name,ans_medal,mode)
                 if status == True:
