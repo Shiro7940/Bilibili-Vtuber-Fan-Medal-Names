@@ -1,4 +1,4 @@
-from medaldata import vtblist, vtb_fan_medal_dict, data_version
+from medaldata import *
 
 def gen_newid():
     roomid = []
@@ -49,7 +49,16 @@ def gen_rid_to_name_dict():
         if datalist[-1] != "无":
             rid_to_name_dict.update({int(datalist[-1]):str(datalist[0])})
     return rid_to_name_dict
-    
+
+def gen_rid_to_fans_dict():
+    rid_to_fans_dict = dict()
+    datatxt = open("vtbs.txt","r",encoding="utf8")
+    for line in datatxt:
+        datalist = line.split() 
+        if datalist[-1] != "无":
+            rid_to_fans_dict.update({int(datalist[-1]):int(datalist[1])})
+    return rid_to_fans_dict
+
 def gen_uid_to_name_dict():
     uid_to_name_dict = dict()
     datatxt = open("vtbs.txt","r",encoding="utf8")
@@ -61,12 +70,12 @@ def gen_uid_to_name_dict():
     
 def find_not_logged_in_vtbs():
     namedict = gen_rid_to_name_dict()
-    lst = []
+    not_logged_list = []
     for item in vtblist:
         feedback = namedict.get(item) 
         if feedback == None:    
-            lst += [item]
-    return lst
+            not_logged_list += [item]
+    return not_logged_list
 
 def find_rid_by_medal(mname:str):
     rid = []
@@ -87,7 +96,7 @@ def old_medal_rid(oldrid:str):
             break
     return int(new)
 
-def get_info_by_medal(mname:str):
+def get_info_by_medal(mname:str,namedict,uiddict,showfans=False):
     try:
         name = []
         uid = []
@@ -97,11 +106,9 @@ def get_info_by_medal(mname:str):
             isold = True
             roomid[0] = old_medal_rid(roomid[0])
             
-        namedict = gen_rid_to_name_dict()
         for item in roomid:
             nametemp = namedict.get(item,"Name Not Found")
             name += [nametemp]
-        uiddict = gen_rid_to_uid_dict()
         for item in roomid:
             uidtemp = uiddict.get(item,"Does Not Exist")
             uid += [uidtemp]
@@ -110,6 +117,10 @@ def get_info_by_medal(mname:str):
             print("此勋章已经不再被使用")
         print("勋章名: "+str(mname)+"\n用户名: "+str(name)+
               "\n  UID: "+str(uid)+"\n房间号: "+str(roomid))
+        if showfans == True:
+            fansdict = gen_rid_to_fans_dict()
+            fans = fansdict.get(roomid,"Does Not Exist")
+            print("粉丝数："+str(fans))
         return [name,uid,roomid]
     
     except Exception as error:
@@ -117,10 +128,8 @@ def get_info_by_medal(mname:str):
         print("An ERROR Occurred")
         return None
 
-def get_info_by_rid(roomid:int):
-    namedict = gen_rid_to_name_dict()
+def get_info_by_rid(roomid:int,namedict,uiddict,showfans=False):
     name = namedict.get(roomid,"Name Not Found")
-    uiddict = gen_rid_to_uid_dict()
     uid = uiddict.get(roomid,"Does Not Exist")
     medal = vtb_fan_medal_dict.get(roomid,"Does Not Exist")
     
@@ -132,6 +141,10 @@ def get_info_by_rid(roomid:int):
             
     print("用户名: "+str(name)+"\n  UID: "+str(uid)+
           "\n房间号: "+str(roomid)+"\n勋章名: "+str(medal))
+    if showfans == True:
+        fansdict = gen_rid_to_fans_dict()
+        fans = fansdict.get(roomid,"Does Not Exist")
+        print("粉丝数："+str(fans)+" ("+data_version+")")
     if old_medals != []:
         print("曾用勋章："+str(old_medals))
         
@@ -155,21 +168,47 @@ def gen_none_list():
             nonelist += [rid]
     return nonelist
 
+def gen_update_list(fanlimit=900):
+    nonelist = gen_none_list()
+    fansdict = gen_rid_to_fans_dict()
+    update_list = []
+    for item in nonelist:
+        current_fans = fansdict.get(int(item),0)
+        if current_fans >= fanlimit:
+            update_list += [item]
+    return update_list
+
+def batch(datalist:list):
+    print("-------------------")
+    namedict = gen_rid_to_name_dict()
+    uiddict = gen_rid_to_uid_dict()
+    for item in datalist:
+        try: 
+            inputdata = int(item)
+            livedata = get_info_by_rid(item,namedict,uiddict,showfans=True)
+        except:
+            medaldata = get_info_by_medal(item,namedict,uiddict,showfans=True)
+        print("-------------------")        
+
 def main():
     exit = False
     print("当前数据库版本："+data_version)
+    namedict = gen_rid_to_name_dict()
+    uiddict = gen_rid_to_uid_dict()    
     while not exit:
         print("-------------------")
         inputdata = str(input("请输入粉丝勋章名/房间号: "))
+        if inputdata.upper() == "E":
+            break
         try: 
             inputdata = int(inputdata)
-            livedata = get_info_by_rid(inputdata)
+            livedata = get_info_by_rid(inputdata,namedict,uiddict)
         except:
-            medaldata = get_info_by_medal(inputdata)
+            medaldata = get_info_by_medal(inputdata,namedict,uiddict)
         print("-------------------")
         if str(input("退出? Y/y: ")).upper() == "Y":
             exit = True
 
-      
+
 if __name__ == "__main__":
     main()
