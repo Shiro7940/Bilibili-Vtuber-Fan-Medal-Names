@@ -50,6 +50,15 @@ def gen_rid_to_name_dict():
             rid_to_name_dict.update({int(datalist[-1]):str(datalist[0])})
     return rid_to_name_dict
 
+def gen_name_to_rid_dict():
+    name_to_rid_dict = dict()
+    datatxt = open("vtbs.txt","r",encoding="utf8")
+    for line in datatxt:
+        datalist = line.split()    
+        if datalist[-1] != "无":
+            name_to_rid_dict.update({str(datalist[0]):int(datalist[-1])})
+    return name_to_rid_dict
+
 def gen_rid_to_fans_dict():
     rid_to_fans_dict = dict()
     datatxt = open("vtbs.txt","r",encoding="utf8")
@@ -178,22 +187,48 @@ def gen_update_list(fanlimit=900):
             update_list += [item]
     return update_list
 
-def batch(datalist:list):
+
+def search_by_str(stri,name_to_riddict=None):
+    if name_to_riddict == None:
+        name_to_riddict = gen_name_to_rid_dict()
+    keylist = list(name_to_riddict.keys())
+    result_name = []
+    for item in keylist:
+        temp = item.upper()
+        if stri.upper() in temp:
+            result_name += [item]
+    result_rid = []
+    for name in result_name:
+        rid = name_to_riddict.get(name)
+        result_rid += [rid]
+    if result_rid != []:
+        batch(result_rid,showfans=False)
+        length = str(len(result_rid))
+        if length != "1":
+            print(length+" Results")
+        else:
+            print(length+" Result")
+    else:
+        print("No Result")
+    return result_rid
+    
+def batch(datalist:list,showfans=True):
     print("-------------------")
     namedict = gen_rid_to_name_dict()
     uiddict = gen_rid_to_uid_dict()
     for item in datalist:
         try: 
             inputdata = int(item)
-            livedata = get_info_by_rid(item,namedict,uiddict,showfans=True)
+            livedata = get_info_by_rid(item,namedict,uiddict,showfans)
         except:
-            medaldata = get_info_by_medal(item,namedict,uiddict,showfans=True)
+            medaldata = get_info_by_medal(item,namedict,uiddict,showfans)
         print("-------------------")        
 
 def main():
     exit = False
     print("当前数据库版本："+data_version)
     namedict = gen_rid_to_name_dict()
+    name_to_riddict = gen_name_to_rid_dict()
     uiddict = gen_rid_to_uid_dict()    
     while not exit:
         print("-------------------")
@@ -204,8 +239,15 @@ def main():
             inputdata = int(inputdata)
             livedata = get_info_by_rid(inputdata,namedict,uiddict)
         except:
-            medaldata = get_info_by_medal(inputdata,namedict,uiddict)
-        print("-------------------")
+            if (":" in inputdata) or (";" in inputdata)\
+            or ("：" in inputdata) or ("；" in inputdata):
+                print("搜索模式")
+                inputdata = inputdata.replace(":","").replace(";","")\
+                                     .replace("：","").replace("；","")
+                search_by_str(inputdata,name_to_riddict)
+            else:
+                medaldata = get_info_by_medal(inputdata,namedict,uiddict)
+                print("-------------------")
         if str(input("退出? Y/y: ")).upper() == "Y":
             exit = True
 
