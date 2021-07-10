@@ -27,6 +27,16 @@ def dict_update(olddict:dict,newdict:dict):
                     break
             print(',"'+str(rid)+'-'+str(n)+'":"'+str(oldmedal)+'"')
 
+def gen_uid_list():
+    uid_list = []
+    datatxt = open("vtbs.txt","r",encoding="utf8")
+    for line in datatxt:
+        datalist = line.split()    
+        if datalist[-2] != "无":
+            uid_list += [int(datalist[-2])]
+    uid_list.sort()
+    return uid_list
+
 def gen_rid_to_uid_dict():
     i=0
     rid_to_uid_dict = dict()
