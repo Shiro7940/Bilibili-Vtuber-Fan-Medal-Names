@@ -9,14 +9,24 @@ def gen_newid():
             roomid += [int(datalist[-1])]
             
     ridset = set(roomid)
-    
     for item in vtblist:
         ridset.discard(item)
         
     print(ridset)
     datatxt.close()
     return list(ridset)
-    
+
+def dict_update(olddict:dict,newdict:dict):
+    old_item_list = list(olddict.items())
+    for item in old_item_list:
+        rid,oldmedal = item
+        newmedal = newdict.get(rid,None)
+        if (oldmedal != newmedal) and (newmedal != None):
+            for n in range(1,10):
+                if olddict.get(str(str(rid)+"-"+str(n)),None) == None:
+                    break
+            print(',"'+str(rid)+'-'+str(n)+'":"'+str(oldmedal)+'"')
+
 def gen_rid_to_uid_dict():
     i=0
     rid_to_uid_dict = dict()
@@ -250,7 +260,6 @@ def main():
                 print("-------------------")
         if str(input("退出? Y/y: ")).upper() == "Y":
             exit = True
-
 
 if __name__ == "__main__":
     main()
