@@ -21,7 +21,9 @@ def dict_update(olddict:dict,newdict:dict):
     for item in old_item_list:
         rid,oldmedal = item
         newmedal = newdict.get(rid,None)
-        if (oldmedal != newmedal) and (newmedal != None):
+        if "-" in str(rid):
+            print(',"'+str(rid)+'":"'+str(oldmedal)+'"')
+        if (oldmedal != newmedal) and (newmedal != None) and (oldmedal != "暂无粉丝勋章"):
             for n in range(1,10):
                 if olddict.get(str(str(rid)+"-"+str(n)),None) == None:
                     break
